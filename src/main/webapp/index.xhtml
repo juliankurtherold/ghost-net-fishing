@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Ghost Net Fishing</title>
+    <style>
+        body {
+            margin: 0;
+            background: #f6f8fb;
+            color: #2f3a45;
+            font-family: Arial, sans-serif;
+        }
+
+        .app-header {
+            background: linear-gradient(90deg, #111827, #2f3a45, #4b5563);
+            color: #ffffff;
+            padding: 18px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+        }
+
+        .brand-area {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .app-logo {
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.08);
+        }
+
+        .ghost-fish {
+            position: relative;
+            width: 36px;
+            height: 22px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50% 45% 45% 50%;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.45);
+        }
+
+        .ghost-fish::before {
+            content: "";
+            position: absolute;
+            right: -10px;
+            top: 5px;
+            width: 0;
+            height: 0;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            border-left: 12px solid rgba(255, 255, 255, 0.82);
+        }
+
+        .ghost-fish::after {
+            content: "";
+            position: absolute;
+            left: 8px;
+            top: 7px;
+            width: 4px;
+            height: 4px;
+            background: #111827;
+            border-radius: 50%;
+            box-shadow: 10px 0 0 rgba(17, 24, 39, 0.75);
+        }
+
+        .ghost-wave {
+            position: absolute;
+            left: 4px;
+            bottom: -5px;
+            width: 28px;
+            height: 8px;
+            border-bottom: 3px dotted rgba(255, 255, 255, 0.78);
+            border-radius: 50%;
+            opacity: 0.9;
+        }
+
+        .app-title {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 0.2px;
+        }
+
+        .app-nav {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .app-nav-item {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 14px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.12);
+            font-weight: bold;
+        }
+
+        .app-container {
+            max-width: 1700px;
+            margin: 32px auto;
+            padding: 0 24px;
+        }
+
+        .intro-text {
+            margin-top: 0;
+            margin-bottom: 24px;
+            color: #5f6b76;
+        }
+
+        .form-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 14px;
+        }
+
+        .form-label {
+            width: 260px;
+            font-weight: bold;
+            vertical-align: middle;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 6px;
+        }
+
+        .ghostnet-table .ui-datatable-tablewrapper {
+            overflow-x: visible;
+        }
+
+        .ghostnet-table table {
+            width: 100% !important;
+            table-layout: fixed;
+        }
+
+        .ghostnet-table th,
+        .ghostnet-table td {
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        .col-toggle { width: 50px; }
+        .col-id { width: 80px; }
+        .col-status { width: 260px; }
+        .col-recoverer { width: 300px; }
+        .col-action { width: 460px; }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+
+        .action-buttons .ui-button {
+            white-space: nowrap;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(160px, 1fr));
+            gap: 16px;
+            padding: 14px 18px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #6b7280;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            font-size: 15px;
+            color: #2f3a45;
+        }
+
+        @media (max-width: 1100px) {
+            .app-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 14px;
+            }
+
+            .app-nav {
+                flex-wrap: wrap;
+            }
+
+            .ghostnet-table .ui-datatable-tablewrapper {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <div class="app-header">
+        <div class="brand-area">
+            <div class="app-logo" aria-label="Ghost Net Fishing Logo">
+                <div class="ghost-fish">
+                    <span class="ghost-wave"></span>
+                </div>
+            </div>
+            <div class="app-title">Ghost Net Fishing</div>
+        </div>
+        <div class="app-nav">
+            <a class="app-nav-item" href="#mainForm">Startseite</a>
+            <a class="app-nav-item" href="#newGhostNetPanel">Neues Geisternetz melden</a>
+            <a class="app-nav-item" href="#ghostNetTable">Geisternetze anzeigen</a>
+        </div>
+    </div>
+
+    <h:form id="mainForm">
+
+        <div class="app-container">
+            <h1 style="margin-bottom: 8px;">Ghost Net Fishing</h1>
+            <p class="intro-text">
+                Neues Geisternetz erfassen und bereits gemeldete Geisternetze anzeigen.
+            </p>
+
+            <p:messages id="messages" showDetail="true" closable="true" autoUpdate="true"/>
+
+            <p:panel id="newGhostNetPanel" header="Neues Geisternetz erfassen" style="margin-bottom: 30px;">
+                <table class="form-table">
+                    <tr>
+                        <td class="form-label">Latitude:</td>
+                        <td>
+                            <p:inputNumber id="latitude"
+                                           value="#{ghostNetController.ghostNet.latitude}"
+                                           decimalPlaces="6"
+                                           minValue="-90"
+                                           maxValue="90"
+                                           style="width: 100%;"/>
+                            <div class="help-text">
+                                Zulässiger Bereich: -90 bis 90, maximal 6 Nachkommastellen.
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form-label">Longitude:</td>
+                        <td>
+                            <p:inputNumber id="longitude"
+                                           value="#{ghostNetController.ghostNet.longitude}"
+                                           decimalPlaces="6"
+                                           minValue="-180"
+                                           maxValue="180"
+                                           style="width: 100%;"/>
+                            <div class="help-text">
+                                Zulässiger Bereich: -180 bis 180, maximal 6 Nachkommastellen.
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form-label">Geschätzte Größe (m²):</td>
+                        <td>
+                            <p:inputNumber id="estimatedSize"
+                                           value="#{ghostNetController.ghostNet.estimatedSize}"
+                                           decimalPlaces="0"
+                                           minValue="1"
+                                           style="width: 100%;"/>
+                            <div class="help-text">
+                                Bitte eine geschätzte Fläche in Quadratmetern angeben.
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form-label">Status:</td>
+                        <td>
+                            <p:selectOneMenu id="status"
+                                             value="#{ghostNetController.ghostNet.status}"
+                                             style="width: 100%;">
+                                <f:selectItems value="#{ghostNetController.statuses}"
+                                               var="status"
+                                               itemLabel="#{status.displayName}"
+                                               itemValue="#{status}"/>
+                            </p:selectOneMenu>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="padding-top: 8px;">
+                            <p:commandButton value="Speichern"
+                                             action="#{ghostNetController.save}"
+                                             update="@form"/>
+                        </td>
+                    </tr>
+                </table>
+            </p:panel>
+
+            <p:panel id="recoveryPersonPanel" header="Für Bergung eintragen" style="margin-bottom: 30px;">
+                <table class="form-table">
+                    <tr>
+                        <td class="form-label">Name:</td>
+                        <td>
+                            <p:inputText id="recovererName"
+                                         value="#{ghostNetController.bergendePerson.name}"
+                                         style="width: 100%;"/>
+                            <div class="help-text">
+                                Name der bergenden Person oder Organisation.
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form-label">Telefonnummer:</td>
+                        <td>
+                            <p:inputText id="recovererPhone"
+                                         value="#{ghostNetController.bergendePerson.telefonnummer}"
+                                         style="width: 100%;"/>
+                            <div class="help-text">
+                                Kontaktmöglichkeit für Rückfragen zur Bergung.
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="form-label">Geisternetz:</td>
+                        <td>
+                            <p:selectOneMenu id="selectedGhostNet"
+                                             value="#{ghostNetController.selectedGhostNetId}"
+                                             style="width: 100%;">
+                                <f:selectItem itemLabel="Bitte Geisternetz auswählen" itemValue="" noSelectionOption="true"/>
+                                <f:selectItems value="#{ghostNetController.ghostNets}"
+                                               var="net"
+                                               itemLabel="ID #{net.id} - #{net.estimatedSize} m² - #{net.status.displayName}"
+                                               itemValue="#{net.id}"/>
+                            </p:selectOneMenu>
+                            <div class="help-text">
+                                Wählen Sie das Geisternetz aus, für das die Bergung übernommen werden soll.
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="padding-top: 8px;">
+                            <p:commandButton value="Für Bergung eintragen"
+                                             action="#{ghostNetController.registerForRecovery}"
+                                             update="@form"
+                                             styleClass="ui-button-info"/>
+                        </td>
+                    </tr>
+                </table>
+            </p:panel>
+
+            <p:panel header="Geisternetze">
+                <div style="margin-bottom: 16px; display: flex; align-items: center; gap: 12px;">
+                    <span style="font-weight: bold;">Anzeige:</span>
+                    <p:selectBooleanCheckbox id="openFilter"
+                                             value="#{ghostNetController.showOnlyOpenGhostNets}">
+                        <p:ajax update="ghostNetTable"/>
+                    </p:selectBooleanCheckbox>
+                    <h:outputLabel for="openFilter" value="Nur noch zu bergende Geisternetze anzeigen"/>
+                </div>
+                <p:dataTable id="ghostNetTable"
+                             styleClass="ghostnet-table"
+                             value="#{ghostNetController.ghostNets}"
+                             var="net"
+                             rowKey="#{net.id}"
+                             emptyMessage="Noch keine Geisternetze vorhanden."
+                             rows="10"
+                             paginator="true"
+                             paginatorPosition="bottom"
+                             tableStyle="width: 100%; table-layout: fixed;"
+                             style="width: 100%;">
+
+                    <p:column styleClass="col-toggle">
+                        <p:rowToggler/>
+                    </p:column>
+
+                    <p:column headerText="ID" styleClass="col-id">
+                        <h:outputText value="#{net.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Status" styleClass="col-status">
+                        <p:selectOneMenu value="#{net.status}" style="min-width: 190px;" panelStyle="min-width: 190px;">
+                            <f:selectItems value="#{ghostNetController.statuses}"
+                                           var="status"
+                                           itemLabel="#{status.displayName}"
+                                           itemValue="#{status}"/>
+                        </p:selectOneMenu>
+                    </p:column>
+
+                    <p:column headerText="Bergende Person" styleClass="col-recoverer">
+                        <h:outputText value="#{empty net.bergendePerson ? 'Noch nicht eingetragen' : net.bergendePerson.name}"/>
+                    </p:column>
+
+                    <p:column headerText="Aktion" styleClass="col-action">
+                        <div class="action-buttons">
+                            <p:commandButton value="Aktualisieren"
+                                             action="#{ghostNetController.updateGhostNet(net)}"
+                                             update="@form"/>
+
+                            <p:commandButton value="Als geborgen melden"
+                                             action="#{ghostNetController.markAsRecovered(net)}"
+                                             update="@form"
+                                             styleClass="ui-button-success"/>
+
+                            <p:commandButton value="Löschen"
+                                             action="#{ghostNetController.deleteGhostNet(net)}"
+                                             update="@form"
+                                             styleClass="ui-button-danger">
+                                <p:confirm header="Bestätigung"
+                                           message="Möchten Sie dieses Geisternetz wirklich löschen?"
+                                           icon="pi pi-exclamation-triangle"/>
+                            </p:commandButton>
+                        </div>
+                    </p:column>
+
+                    <p:rowExpansion>
+                        <div class="detail-grid">
+                            <div>
+                                <div class="detail-label">Latitude</div>
+                                <div class="detail-value"><h:outputText value="#{net.latitude}"/></div>
+                            </div>
+                            <div>
+                                <div class="detail-label">Longitude</div>
+                                <div class="detail-value"><h:outputText value="#{net.longitude}"/></div>
+                            </div>
+                            <div>
+                                <div class="detail-label">Geschätzte Größe</div>
+                                <div class="detail-value"><h:outputText value="#{net.estimatedSize} m²"/></div>
+                            </div>
+                            <div>
+                                <div class="detail-label">Telefonnummer bergende Person</div>
+                                <div class="detail-value"><h:outputText value="#{empty net.bergendePerson ? 'Noch nicht vorhanden' : net.bergendePerson.telefonnummer}"/></div>
+                            </div>
+                        </div>
+                    </p:rowExpansion>
+
+                </p:dataTable>
+            </p:panel>
+        </div>
+
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+            <p:commandButton value="Ja" type="button" styleClass="ui-confirmdialog-yes ui-button-danger"/>
+            <p:commandButton value="Nein" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"/>
+        </p:confirmDialog>
+
+    </h:form>
+</h:body>
+</html>

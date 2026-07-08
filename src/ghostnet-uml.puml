@@ -1,0 +1,74 @@
+@startuml
+left to right direction
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam class {
+    BackgroundColor #F8FAFC
+    BorderColor #334155
+    ArrowColor #334155
+}
+
+title UML-Strukturdiagramm der Anwendung Ghost Net Fishing
+
+package "Präsentationsschicht" {
+    class GhostNetController <<Managed Bean>> {
+        - ghostNet: GhostNet
+        - bergendePerson: BergendePerson
+        - selectedGhostNetId: Long
+        - ghostNets: List<GhostNet>
+        - showOnlyOpenGhostNets: boolean
+        + save()
+        + updateGhostNet(ghostNet: GhostNet)
+        + deleteGhostNet(ghostNet: GhostNet)
+        + markAsRecovered(ghostNet: GhostNet)
+        + registerForRecovery()
+    }
+}
+
+package "Geschäfts- und Persistenzschicht" {
+    class GhostNetService <<Service Bean>> {
+        - emf: EntityManagerFactory
+        + saveGhostNet(ghostNet: GhostNet)
+        + saveBergendePerson(bergendePerson: BergendePerson)
+        + findAll(): List<GhostNet>
+        + findGhostNetById(id: Long): GhostNet
+        + findOpenGhostNets(): List<GhostNet>
+        + updateGhostNet(ghostNet: GhostNet)
+        + assignBergendePerson(ghostNet: GhostNet, bergendePerson: BergendePerson)
+        + deleteGhostNet(ghostNet: GhostNet)
+    }
+}
+
+package "Datenmodell" {
+    class GhostNet <<Entity>> {
+        - id: Long
+        - latitude: Double
+        - longitude: Double
+        - estimatedSize: Integer
+        - status: GhostNetStatus
+        - bergendePerson: BergendePerson
+    }
+
+    class BergendePerson <<Entity>> {
+        - id: Long
+        - name: String
+        - telefonnummer: String
+    }
+
+    enum GhostNetStatus <<Enum>> {
+        GEMELDET
+        BERGUNG_BEVORSTEHEND
+        GEBORGEN
+        VERSCHOLLEN
+    }
+}
+
+GhostNetController --> GhostNetService : nutzt
+
+GhostNetService --> GhostNet : speichert/lädt
+GhostNetService --> BergendePerson : speichert/lädt
+
+GhostNet "0..*" --> "0..1" BergendePerson : bergendePerson
+GhostNet --> GhostNetStatus : status
+@enduml
