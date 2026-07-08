@@ -1,23 +1,25 @@
 # Ghost Net Fishing
 
-Java EE web application for reporting, managing and recovering ghost nets.  
-This project was developed as part of a university case study.
+Java-EE-Webanwendung zur Erfassung, Verwaltung und Bergung von Geisternetzen.  
+Dieses Projekt wurde im Rahmen einer universitären Fallstudie entwickelt.
 
-## Description
+## Beschreibung
 
-Ghost Net Fishing is a web application that supports the management of lost fishing nets (ghost nets). Users can report discovered ghost nets, update their status and register recovery information.
+Ghost Net Fishing ist eine Webanwendung zur Unterstützung der Verwaltung verlorener Fischernetze (Geisternetze). Die Anwendung ermöglicht es, gefundene Geisternetze zu melden, deren Status zu verwalten und die Bergung durch Personen oder Organisationen zu koordinieren.
 
-The application provides functions for:
-- reporting new ghost nets with GPS coordinates and estimated size
-- displaying registered ghost nets
-- filtering ghost nets requiring recovery
-- assigning recovering persons to ghost nets
-- updating the recovery status
-- deleting entries
+Die Anwendung stellt folgende Funktionen bereit:
 
-## Technologies
+- Erfassung neuer Geisternetze mit GPS-Koordinaten und geschätzter Größe
+- Anzeige aller registrierten Geisternetze
+- Filterung noch zu bergender Geisternetze
+- Eintragung bergender Personen für ein Geisternetz
+- Aktualisierung des Bergungsstatus
+- Markierung eines Geisternetzes als geborgen oder verschollen
+- Löschen bestehender Einträge
 
-The application was developed using:
+## Verwendete Technologien
+
+Die Anwendung wurde mit folgenden Technologien umgesetzt:
 
 - Java
 - Jakarta EE
@@ -28,32 +30,34 @@ The application was developed using:
 - Maven
 - Apache TomEE
 
-## Architecture
+## Architektur
 
-The application follows a layered architecture:
+Die Anwendung basiert auf einer mehrschichtigen Architektur:
 
-- Presentation layer: JSF pages and PrimeFaces components
-- Controller layer: Managed Bean for user interaction
-- Service layer: Business logic and database operations
-- Persistence layer: JPA entities mapped to a MySQL database
+- Präsentationsschicht: JSF-Seite mit PrimeFaces-Komponenten
+- Controller-Schicht: Managed Bean zur Verarbeitung von Benutzerinteraktionen
+- Service-Schicht: Umsetzung der Geschäftslogik und Datenbankoperationen
+- Persistenzschicht: JPA-Entitäten zur Abbildung der Datenbankstruktur
 
-## Main Components
+## Hauptkomponenten
 
-- `GhostNetController` – handles user interactions
-- `GhostNetService` – manages business logic and persistence operations
-- `GhostNet` – entity representing a reported ghost net
-- `BergendePerson` – entity representing a recovering person
-- `GhostNetStatus` – enum representing the current status of a ghost net
+- `GhostNetController` – verarbeitet Benutzereingaben und steuert die Anwendung
+- `GhostNetService` – enthält Geschäftslogik und verwaltet Datenbankzugriffe
+- `GhostNet` – Entität zur Darstellung eines gemeldeten Geisternetzes
+- `BergendePerson` – Entität zur Darstellung einer Person oder Organisation, die eine Bergung übernimmt
+- `GhostNetStatus` – Enum zur Verwaltung des aktuellen Status eines Geisternetzes
 
-## Database
+## Datenbank
 
-The application uses a relational MySQL database containing tables for:
+Die Anwendung verwendet eine relationale MySQL-Datenbank.
 
-- ghost nets
-- recovering persons
+Die Datenbank enthält Tabellen zur Speicherung von:
 
-The relationship between both entities is implemented using JPA.
+- Geisternetzen
+- bergenden Personen
 
-## License
+Die Beziehung zwischen den Entitäten wird über JPA umgesetzt.
 
-This repository was created for educational purposes as part of a university project.
+## Projektkontext
+
+Dieses Repository dient der Dokumentation und Bereitstellung des Quellcodes einer Fallstudie im Rahmen des Studiums.
